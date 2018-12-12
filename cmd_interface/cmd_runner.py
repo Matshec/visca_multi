@@ -7,7 +7,7 @@ class CmdRunner:
         self._main_cam = None
         self._cmds = None
 
-    def setup_interface(self, inf):
+    def setup_interface(self, inf="COM1"):
         self._main_cam = D100(output=inf)
         self._main_cam.init()
         # register functions

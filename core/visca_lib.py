@@ -5,7 +5,7 @@ import serial
 from scipy.interpolate import interp1d
 
 
-class Camera(object):
+class Camera:
     _input = None
     _output = None
     _output_string = None
@@ -118,7 +118,8 @@ class D100(Camera):
         :type output: str
         """
         self.interp = interp1d([int(f[:-1], 16) for f in self.values], self.y)
-        super(self.__class__, self).__init__(output=output)
+        super().__init__(output)
+        #super(self.__class__, self).__init__(output=output)
 
     def init(self):
         """Initializes camera object by connecting to serial port.
@@ -126,7 +127,7 @@ class D100(Camera):
         :return: Camera object.
         :rtype: Camera
         """
-        super(self.__class__, self).init()
+        super().init()
         return self
 
     def comm(self, com):
@@ -263,6 +264,10 @@ class D100(Camera):
         h2 = '0' + h2 if len(h2) < 2 else h2
         return self.comm(string.replace('VV', h1).replace('WW', h2))
 
+    def _validate_speed(self, num):
+        if 24 < num < 0:
+            raise ValueError("value not in range 0 - 24")
+
     def left(self, amount=5):
         """Modifies pan speed to left.
 
@@ -270,6 +275,7 @@ class D100(Camera):
         :return: True if successful, False if not.
         :rtype: bool
         """
+        self._validate_speed(amount)
         hex_string = "%X" % amount
         hex_string = '0' + hex_string if len(hex_string) < 2 else hex_string
         s = '81010601VVWW0103FF'.replace('VV', hex_string).replace('WW', str(15))
@@ -281,6 +287,7 @@ class D100(Camera):
         :param amount: Speed (0-24)
         :return: True if successful, False if not.
         """
+        self._validate_speed(amount)
         hex_string = "%X" % amount
         hex_string = '0' + hex_string if len(hex_string) < 2 else hex_string
         s = '81010601VVWW0203FF'.replace('VV', hex_string).replace('WW', str(15))
@@ -292,6 +299,7 @@ class D100(Camera):
         :param amount: Speed (0-24)
         :return: True if successful, False if not.
         """
+        self._validate_speed(amount)
         hs = "%X" % amount
         hs = '0' + hs if len(hs) < 2 else hs
         s = '81010601VVWW0301FF'.replace('VV', str(15)).replace('WW', hs)
@@ -303,6 +311,7 @@ class D100(Camera):
         :param amount: Speed (0-24)
         :return: True if successful, False if not.
         """
+        self._validate_speed(amount)
         hs = "%X" % amount
         hs = '0' + hs if len(hs) < 2 else hs
         s = '81010601VVWW0302FF'.replace('VV', str(15)).replace('WW', hs)

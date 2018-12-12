@@ -32,8 +32,10 @@ class CliHandler:
 if __name__ == '__main__':
     cli = CliHandler()
     while True:
-        cli_input = input()
-        if cli_input == "end":
-            break
-        cli.identify_input(cli_input)
-
+        try:
+            cli_input = input()
+            if cli_input == "end":
+                break
+            cli.identify_input(cli_input)
+        except Exception as err:
+            print("bad command try again")
