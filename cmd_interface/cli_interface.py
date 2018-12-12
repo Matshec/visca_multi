@@ -1,16 +1,19 @@
 from macros_holder import MacrosHolder
+from cmd_runner import CmdRunner
 
 
 class CliHandler:
 
     def __init__(self):
         self._macros_holder = MacrosHolder()
+        self._cmd_runner = CmdRunner()
+        self._cmd_runner.setup_mock('dp')
 
     def print_help(self):
         print("to exit enter done,"
           "to register macro enter define and then macro name followed by set on commands separated by commas,"
           "to run macro enter do and then macro name,"
-          "to run sigle command enter it's name")
+          "to run sigle command enter it's name with parameter separeted by spaces")
 
     def identify_input(self, data:str):
         if data.startswith("define"):
@@ -18,17 +21,19 @@ class CliHandler:
         elif data.startswith("help"):
             self.print_help()
         elif data.startswith("do"):
-            pass
-            # run macro
+            macro = self._macros_holder.get_macro(data[len("do"):])
+            self._cmd_runner.run_macro(macro)
+        elif data.startswith("commands"):
+            print(*self._cmd_runner.available_commands())
         else:
-           print(self._macros_holder._macros)
+           self._cmd_runner.parse_and_run(data)
 
 
 if __name__ == '__main__':
     cli = CliHandler()
     while True:
         cli_input = input()
-        if cli_input == "done":
+        if cli_input == "end":
             break
         cli.identify_input(cli_input)
 

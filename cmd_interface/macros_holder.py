@@ -17,5 +17,7 @@ class MacrosHolder:
         macro_body = map(lambda x: x.lstrip(), splitted)
         self._macros[macro_name] = list(macro_body)
 
-    def run_macro(self, name):
-        raise NotImplementedError
+    def get_macro(self, name):
+        name = name.strip()
+        return self._macros.get(name)
+
