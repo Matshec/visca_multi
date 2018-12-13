@@ -1,6 +1,7 @@
 from flask import Flask, render_template, Response
 from flask_restful import reqparse, abort, Api, Resource
 import core.visca_lib as visca
+import core.var_int_visca as var_int_visca
  
 
 app = Flask( __name__ )
@@ -16,6 +17,7 @@ def home():
 
 parser = reqparse.RequestParser()
 parser.add_argument( 'input', type=int )
+parser.add_argument( 'input_2', type=int )
 
 class ViscaTest( Resource ):
     def get(self):
@@ -84,6 +86,24 @@ class ExposureAuto( Resource ):
 class Stop( Resource ):    
     def get(self):
         camera.stop()
+        return Response( home() , mimetype='text/html' )
+
+class MulticastAddress( Resource ):    
+    def get(self):
+        cam = var_int_visca.VariableIntCam()
+        cam.set_broadcast()
+        cam.comm( 'xx3001ff' )
+        return Response( home() , mimetype='text/html' )
+
+class UnicastAddress( Resource ):    
+    def get(self):
+        args = parser.parse_args()
+        input = args['input']
+        input_2 = args['input_2']
+        cam = var_int_visca.VariableIntCam()
+        cam.set_unicast( input )
+        hex = 'xx300' + str(input_2) + 'ff'
+        cam.comm( hex )
         return Response( home() , mimetype='text/html' )         
     
 # Setup the Api resource routing here
@@ -98,5 +118,7 @@ api.add_resource( Reset, '/reset' )
 api.add_resource( FocusNear, '/focus_near' )
 api.add_resource( ExposureAuto, '/exposure_auto' )
 api.add_resource( Stop, '/stop' )
+api.add_resource( MulticastAddress, '/address_multicast' )
+api.add_resource( UnicastAddress, '/address_unicast' )
 
 app.run(debug=False)

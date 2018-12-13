@@ -1,8 +1,8 @@
 import re
 import binascii
 import numpy as np
-import serial
-#import web_interface.fakeSerial as serial    #for development purposes only
+#import serial
+import web_interface.fakeSerial as serial    #for development purposes only
 from scipy.interpolate import interp1d
 
 

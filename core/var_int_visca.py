@@ -2,11 +2,12 @@
 from core.visca_lib import D100
 
 
-class VariabieIntCam(D100):
+class VariableIntCam(D100):
 
-    def __init__(self, target_int):
+    def __init__(self): #, target_int):
         super().__init__()
-        self.target_int = target_int
+        #what for? can be set by set_broadcast or set_unicast
+        #self.target_int = target_int
 
     def set_broadcast(self):
         self.target_int = 8
@@ -16,7 +17,7 @@ class VariabieIntCam(D100):
         self.target_int = int
 
     def _validate_int(self, num):
-        if 8 < num < 1:
+        if 8 < num < 1:  # not 0?
             raise ValueError("bad dest given")
 
     def comm(self, com):
