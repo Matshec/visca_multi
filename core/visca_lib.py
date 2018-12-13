@@ -117,6 +117,7 @@ class D100(Camera):
         :param output: Serial port string. (default: 'COM1')
         :type output: str
         """
+
         self.interp = interp1d([int(f[:-1], 16) for f in self.values], self.y)
         super().__init__(output)
         #super(self.__class__, self).__init__(output=output)
