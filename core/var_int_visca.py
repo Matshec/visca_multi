@@ -4,8 +4,8 @@ from core.visca_lib import D100
 
 class VariabieIntCam(D100):
 
-    def __init__(self, target_int):
-        super().__init__()
+    def __init__(self, output="COM1", target_int=1):
+        super().__init__(output)
         self.target_int = target_int
 
     def set_broadcast(self):
@@ -14,6 +14,9 @@ class VariabieIntCam(D100):
     def set_unicast(self, int):
         self._validate_int(int)
         self.target_int = int
+
+    def set_default(self):
+        self.target_int = 1
 
     def _validate_int(self, num):
         if 8 < num < 1:

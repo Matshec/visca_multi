@@ -1,5 +1,6 @@
 import time
-from ..core.visca_lib import D100
+#from core.visca_lib import D100
+from core.var_int_visca import VariabieIntCam
 
 class CmdRunner:
 
@@ -8,7 +9,7 @@ class CmdRunner:
         self._cmds = None
 
     def setup_interface(self, inf="COM1"):
-        self._main_cam = D100(output=inf)
+        self._main_cam = VariabieIntCam(output=inf)
         self._main_cam.init()
         # register functions
         self._cmds = {
@@ -21,7 +22,10 @@ class CmdRunner:
             "up": self._main_cam.up,
             "down": self._main_cam.up,
             "exposure_auto": self._main_cam.exposure_full_auto,
-            "wait": time.sleep
+            "wait": time.sleep,
+            "unicast": self._main_cam.set_unicast,
+            "multicast": self._main_cam.set_broadcast,
+            "set_def": self._main_cam.set_default
 
         }
 
@@ -36,15 +40,25 @@ class CmdRunner:
         return list(self._cmds.keys())
 
     def parse_and_run(self, data):
+        response = ""
         cmd, args = self._parse_to_cmd_and_args(data)
+        func = self._cmds[cmd]
         if args:
-            self._cmds[cmd](*args)
+            func(*args)
         else:
-            self._cmds[cmd]()
+            func()
+        # check if call read on channel
+        if "set" not in func.__name__ and isinstance(func.__self__, VariabieIntCam):
+            response = self._main_cam.read()
+        return response
+
 
     def run_macro(self, macro):
+        response = ""
         for cmd in macro:
-            self.parse_and_run(cmd)
+            res = self.parse_and_run(cmd)
+            response += res
+        return response
 
     def _parse_to_cmd_and_args(self, data:str):
         args = None

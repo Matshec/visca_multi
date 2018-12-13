@@ -1,5 +1,6 @@
-from macros_holder import MacrosHolder
-from cmd_runner import CmdRunner
+from cmd_interface.macros_holder import MacrosHolder
+from cmd_interface.cmd_runner import CmdRunner
+import sys
 
 
 class CliHandler:
@@ -22,11 +23,11 @@ class CliHandler:
             self.print_help()
         elif data.startswith("do"):
             macro = self._macros_holder.get_macro(data[len("do"):])
-            self._cmd_runner.run_macro(macro)
+            print(self._cmd_runner.run_macro(macro))
         elif data.startswith("commands"):
             print(*self._cmd_runner.available_commands())
         else:
-           self._cmd_runner.parse_and_run(data)
+            print(self._cmd_runner.parse_and_run(data))
 
 
 if __name__ == '__main__':
