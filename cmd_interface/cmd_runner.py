@@ -8,7 +8,7 @@ class CmdRunner:
         self._main_cam = None
         self._cmds = None
 
-    def setup_interface(self, inf="COM1"):
+    def setup_interface(self, inf="COM3"):
         self._main_cam = VariabieIntCam(output=inf)
         self._main_cam.init()
         # register functions
@@ -20,13 +20,13 @@ class CmdRunner:
             "reset_cam": self._main_cam.reset,
             "stop": self._main_cam.stop,
             "up": self._main_cam.up,
-            "down": self._main_cam.up,
+            "down": self._main_cam.down,
             "exposure_auto": self._main_cam.exposure_full_auto,
             "wait": time.sleep,
             "unicast": self._main_cam.set_unicast,
             "multicast": self._main_cam.set_broadcast,
-            "set_def": self._main_cam.set_default
-
+            "set_def": self._main_cam.set_default,
+            "addr": self._main_cam.dupa
         }
 
     def setup_mock(self, int):
@@ -40,15 +40,16 @@ class CmdRunner:
         return list(self._cmds.keys())
 
     def parse_and_run(self, data):
-        response = ""
+        response = "response"
         cmd, args = self._parse_to_cmd_and_args(data)
         func = self._cmds[cmd]
         if args:
             func(*args)
         else:
             func()
-        # check if call read on channel
+        #check if call read on channel
         if "set" not in func.__name__ and isinstance(func.__self__, VariabieIntCam):
+            print( 'jestem grzecznym ifem' )
             response = self._main_cam.read()
         return response
 
@@ -56,6 +57,7 @@ class CmdRunner:
     def run_macro(self, macro):
         response = ""
         for cmd in macro:
+            print(cmd)
             res = self.parse_and_run(cmd)
             response += res
         return response

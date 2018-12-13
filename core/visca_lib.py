@@ -3,6 +3,7 @@ import binascii
 import numpy as np
 import serial
 from scipy.interpolate import interp1d
+import time
 
 
 class Camera:
@@ -37,6 +38,7 @@ class Camera:
         :return: Success.
         :rtype: bool
         """
+        print(com)
         try:
             self._output.write(binascii.unhexlify(com))
             return True
@@ -75,11 +77,17 @@ class Camera:
             return False
 
     def read(self, amount=3):
+        t1 = time.time()
         total = ""
         while True:
             msg = binascii.hexlify(self._output.read())
+            msg = msg.decode('utf-8')
+            print(msg)
             total = total + msg
-            if msg == "ff":
+            if msg == 'ff':
+                break
+            if time.time() - t1 > 5:
+                print('timeout')
                 break
         return total
 
@@ -484,3 +492,8 @@ class D100(Camera):
         :rtype: bool
         """
         return self.comm('8101046308FF')
+    
+    def dupa(self,dest,a):
+        if 1 < dest > 8:
+            raise ValueError('bad destination')
+        return self.comm("8{}300{}FF".format(dest,a))

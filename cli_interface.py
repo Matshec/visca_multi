@@ -1,6 +1,5 @@
 from cmd_interface.macros_holder import MacrosHolder
 from cmd_interface.cmd_runner import CmdRunner
-import sys
 
 
 class CliHandler:
@@ -8,7 +7,8 @@ class CliHandler:
     def __init__(self):
         self._macros_holder = MacrosHolder()
         self._cmd_runner = CmdRunner()
-        self._cmd_runner.setup_mock('dp')
+        #self._cmd_runner.setup_mock('dp')
+        self._cmd_runner.setup_interface("COM3")
 
     def print_help(self):
         print("to exit enter done,"
@@ -21,8 +21,8 @@ class CliHandler:
             self._macros_holder.register_macro(data[len("define"):])
         elif data.startswith("help"):
             self.print_help()
-        elif data.startswith("do"):
-            macro = self._macros_holder.get_macro(data[len("do"):])
+        elif data.startswith("$$"):
+            macro = self._macros_holder.get_macro(data[len("$$"):])
             print(self._cmd_runner.run_macro(macro))
         elif data.startswith("commands"):
             print(*self._cmd_runner.available_commands())
@@ -33,10 +33,10 @@ class CliHandler:
 if __name__ == '__main__':
     cli = CliHandler()
     while True:
-        try:
+#commandsleleft        try:
             cli_input = input()
             if cli_input == "end":
                 break
             cli.identify_input(cli_input)
-        except Exception as err:
-            print("bad command try again")
+#        except Exception as err:
+#            print("bad command try again")
