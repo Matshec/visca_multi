@@ -1,0 +1,46 @@
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>VISCA WEB INTERFACE</title>
+      </head>
+      <body>
+        VISCA WEB INTERFACE
+        <br/>
+        <form action="http://127.0.0.1:5000/visca_test" method="GET">
+          <button>TEST</button>
+        </form>
+        <br/>
+        <form action="http://127.0.0.1:5000/up" method="GET">
+          Speed: <input type="number" name="input" min="0" max="24" required /><br />
+          <input type="submit" value="Up" />
+        </form><br/>
+        <form action="http://127.0.0.1:5000/down" method="GET">
+          Speed: <input type="number" name="input" min="0" max="24" required/><br />
+          <input type="submit" value="Down" />
+        </form><br/>
+        <form action="http://127.0.0.1:5000/left" method="GET">
+          Speed: <input type="number" name="input" min="0" max="24" required/><br />
+          <input type="submit" value="Left" />
+        </form><br/>
+        <form action="http://127.0.0.1:5000/right" method="GET">
+          Speed: <input type="number" name="input" min="0" max="24" required/><br />
+          <input type="submit" value="Right" />
+        </form><br/>
+        <form action="http://127.0.0.1:5000/home" method="GET">
+          <button>Home position</button>
+        </form><br/>
+        <form action="http://127.0.0.1:5000/reset" method="GET">
+          <button>Reset</button>
+        </form><br/>
+        <form action="http://127.0.0.1:5000/stop" method="GET">
+          <button>Stop</button>
+        </form><br/>
+        <!--
+        <form action="http://127.0.0.1:5000/focus_near" method="GET">
+          <button>Near focus</button>
+        </form><br/>
+        -->
+        <form action="http://127.0.0.1:5000/exposure_auto" method="GET">
+          <button>Auto exposure</button>
+        </form><br/>
+    </html>
